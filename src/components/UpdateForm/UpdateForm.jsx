@@ -1,8 +1,8 @@
 import { Formik, Field } from 'formik';
 import { StyledForm, ErrorMsg, InputWrap } from './UpdateForm.styled';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectContacts } from 'redux/contactsSlice';
-import { editContact } from 'redux/operations';
+import { selectContacts } from 'redux/contacts/contactsSlice';
+import { editContact } from 'redux/contacts/operations';
 import { Spinner } from 'components/Spinner';
 import { ContactButton } from 'components/Contact/Contact.styled';
 import { ButtonsWrap } from 'components/ContactForm/ContactForm.styled';

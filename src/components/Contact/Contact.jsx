@@ -1,6 +1,6 @@
 import { useDispatch } from 'react-redux';
 import { ContactButton, ContactItem, ContactWrap } from './Contact.styled';
-import { deleteContact } from 'redux/operations';
+import { deleteContact } from 'redux/contacts/operations';
 import { useState } from 'react';
 import { UpdateForm } from 'components/UpdateForm/UpdateForm';
 import { ButtonsWrap } from 'components/ContactForm/ContactForm.styled';

@@ -1,52 +1,43 @@
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
-import { StyledForm, Label, Button, ErrorMsg } from './ContactForm.styled';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectContacts } from 'redux/contacts/contactsSlice';
-import { addContact } from 'redux/contacts/operations';
+import { StyledForm, Label, Button, ErrorMsg } from './RegForm.styled';
+import { useDispatch } from 'react-redux';
 import { Spinner } from 'components/Spinner';
-import toast from 'react-hot-toast';
 import { useState } from 'react';
+import { signUp } from 'redux/auth/operations';
 
 export const SignupSchema = Yup.object().shape({
   name: Yup.string()
-    .min(2, 'Too Short!')
+    .min(2, 'Must be at least 2 characters long')
     .matches(
       /^[a-zA-Zа-яА-ЯіІєЄїЇю.]+(([' -][a-zA-Zа-яА-ЯіІєЄїЇ .])?[a-zA-Zа-яА-ЯіІєЄїЇ.]*)*$/,
       "Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
     )
     .required('Required'),
-  phone: Yup.string()
+  email: Yup.string().email('Must be a valid email').required('Required'),
+  password: Yup.string()
     .matches(
-      /\+?\d{1,4}?[ .\-\s]?\(?\d{1,3}?\)?[ .\-\s]?\d{1,4}[ .\-\s]?\d{1,4}[ .\-\s]?\d{1,9}/,
-      'Phone number must be digits and can contain spaces, dashes, parentheses and can start with +'
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/,
+      'Password must include at least one letter, one digit, one special character (@, $, !, %, *, ?, or &), and be at least 6 characters in length.'
     )
     .required('Required'),
 });
 
-export const ContactForm = () => {
+export const RegisterForm = () => {
   const [isLoad, setIsLoad] = useState(false);
-  const contacts = useSelector(selectContacts);
   const dispatch = useDispatch();
 
-  const onFormSubmit = contactData => {
-    const { name } = contactData;
-    const isNameInContacts = contacts.some(
-      contact => contact.name.toLowerCase() === name.toLowerCase()
-    );
-    if (isNameInContacts) {
-      toast.error(`${name} is alredy in contacts`);
-      return;
-    }
+  const onFormSubmit = credentials => {
+    console.log(credentials);
     setIsLoad(true);
-    dispatch(addContact(contactData)).finally(() => {
+    dispatch(signUp(credentials)).finally(() => {
       setIsLoad(false);
     });
   };
 
   return (
     <Formik
-      initialValues={{ name: '', phone: '' }}
+      initialValues={{ name: '', email: '', password: '' }}
       validationSchema={SignupSchema}
       onSubmit={(values, actions) => {
         onFormSubmit(values);
@@ -60,13 +51,22 @@ export const ContactForm = () => {
           <ErrorMsg component="div" name="name" />
         </Label>
         <Label>
-          Phone number
-          <Field name="phone" type="tel" placeholder="067 123 45 67" />
-          <ErrorMsg component="div" name="phone" />
+          Email
+          <Field
+            name="email"
+            type="email"
+            placeholder="jacob.mercer@mail.com"
+          />
+          <ErrorMsg component="div" name="email" />
+        </Label>
+        <Label>
+          Password
+          <Field name="password" type="password" placeholder="password" />
+          <ErrorMsg component="div" name="password" />
         </Label>
 
         <Button type="submit" disabled={isLoad}>
-          Add contact {isLoad && <Spinner />}
+          Register {isLoad && <Spinner />}
         </Button>
       </StyledForm>
     </Formik>

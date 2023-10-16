@@ -5,10 +5,10 @@ import {
   editContact,
   fetchContacts,
 } from './operations';
-import { selectFilter } from './filterSlice';
 
 const initialState = {
   items: [],
+  filter: '',
   isLoading: false,
   error: null,
 };
@@ -25,6 +25,11 @@ const handleRejected = (state, action) => {
 const contactsSlice = createSlice({
   name: 'contacts',
   initialState,
+  reducers: {
+    filterChange(_, action) {
+      return action.payload;
+    },
+  },
   extraReducers: builder => {
     builder
       .addCase(fetchContacts.pending, handlePending)
@@ -64,6 +69,8 @@ const contactsSlice = createSlice({
 });
 
 export const contactsReducer = contactsSlice.reducer;
+export const { filterChange } = contactsSlice.actions;
+export const selectFilter = state => state.contacts.filter;
 export const selectContacts = state => state.contacts.items;
 export const selectIsLoading = state => state.contacts.isLoading;
 export const selectError = state => state.contacts.error;
