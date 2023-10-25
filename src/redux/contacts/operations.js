@@ -2,8 +2,6 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
-axios.defaults.baseURL = 'https://651c5528194f77f2a5afb572.mockapi.io';
-
 export const fetchContacts = createAsyncThunk(
   'contacts/fetchAll',
   async (_, thunkAPI) => {
@@ -49,7 +47,7 @@ export const editContact = createAsyncThunk(
   async (editedContact, thunkAPI) => {
     const { id, values } = editedContact;
     try {
-      const { data } = await axios.put(`/contacts/${id}`, values);
+      const { data } = await axios.patch(`/contacts/${id}`, values);
       toast.success('Successfully updated');
       return data;
     } catch (error) {

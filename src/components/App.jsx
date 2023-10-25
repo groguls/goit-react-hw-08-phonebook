@@ -1,56 +1,64 @@
-import {
-  ContactListWraper,
-  GlobalStyle,
-  MainTitle,
-  PageWrapper,
-  Title,
-} from './GlobalStyle';
-import { ContactForm } from './ContactForm/ContactForm';
-import { ContactList } from './ContactList/ContactList';
-import { Filter } from './Filter/Filter';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectContacts } from 'redux/contacts/contactsSlice';
+import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
-import { Toaster } from 'react-hot-toast';
 import { Route, Routes } from 'react-router-dom';
-import { Home } from 'pages/Home';
 import { Login } from 'pages/Login';
 import { Register } from 'pages/Register';
 import { refreshUser } from 'redux/auth/operations';
+import { Layout } from './Layout';
+import { Contacts } from 'pages/Contacts';
+import { PrivateRoute } from './PrivateRoute';
+import { RestrictedRoute } from './RestrictedRoute';
+import { Contact } from './Contact';
+import { AddContactForm } from './AddContactForm';
+import { Home } from 'pages/Home';
 
 export const App = () => {
   const dispatch = useDispatch();
-
-  // useEffect(() => {
-  //   dispatch(fetchContacts());
-  // }, [dispatch]);
 
   useEffect(() => {
     dispatch(refreshUser());
   }, [dispatch]);
 
   return (
-    <div>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="login" element={<Login />} />
-        <Route path="register" element={<Register />} />
-      </Routes>
-    </div>
-    // <PageWrapper>
-    //   <GlobalStyle />
-    //   <MainTitle>Phonebook</MainTitle>
-    //   <ContactForm />
-    //   <ContactListWraper>
-    //     <Title>Contacts</Title>
-    //     {contacts.length > 0 && (
-    //       <>
-    //         <Filter />
-    //         <ContactList />
-    //       </>
-    //     )}
-    //   </ContactListWraper>
-    //   <Toaster position="top-right" />
-    // </PageWrapper>
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route index element={<Home />} />
+        <Route
+          path="contacts"
+          element={
+            <PrivateRoute redirectTo="/login" component={<Contacts />} />
+          }
+        >
+          <Route
+            path="add"
+            element={
+              <PrivateRoute
+                redirectTo="/login"
+                component={<AddContactForm />}
+              />
+            }
+          />
+          <Route
+            path=":contactId"
+            element={
+              <PrivateRoute redirectTo="/login" component={<Contact />} />
+            }
+          />
+        </Route>
+        <Route
+          path="login"
+          element={
+            <RestrictedRoute redirectTo="/contacts" component={<Login />} />
+          }
+        />
+        <Route
+          path="register"
+          element={
+            <RestrictedRoute redirectTo="/contacts" component={<Register />} />
+          }
+        />
+        <Route path="*" element={<Home />} />
+      </Route>
+    </Routes>
   );
 };
