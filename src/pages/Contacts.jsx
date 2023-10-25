@@ -5,10 +5,12 @@ import { Filter } from 'components/Filter';
 import { Suspense, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { fetchContacts } from 'redux/contacts/operations';
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useParams } from 'react-router-dom';
+import { InfoCard } from 'components/InfoCard';
 
 export const Contacts = () => {
   const dispatch = useDispatch();
+  const { contactId } = useParams();
 
   useEffect(() => {
     dispatch(fetchContacts());
@@ -49,6 +51,7 @@ export const Contacts = () => {
         </Box>
       </Drawer>
       <Box sx={{ flexGrow: 1, p: 3 }}>
+        {!contactId && <InfoCard />}
         <Suspense>
           <Outlet />
         </Suspense>

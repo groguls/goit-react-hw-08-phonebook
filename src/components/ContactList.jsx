@@ -32,7 +32,7 @@ export const ContactList = () => {
               selected={selectedIndex === index}
               onClick={() => handleListItemClick(index)}
             >
-              <ListItemText primary={contact.name} />
+              <ListItemText primary={contact.name} secondary={contact.number} />
             </ListItemButton>
           </ListItem>
         ))}

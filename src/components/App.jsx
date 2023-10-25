@@ -11,15 +11,20 @@ import { RestrictedRoute } from './RestrictedRoute';
 import { Contact } from './Contact';
 import { AddContactForm } from './AddContactForm';
 import { Home } from 'pages/Home';
+import { LinearProgress } from '@mui/material';
+import { useAuth } from 'hooks/useAuth';
 
 export const App = () => {
+  const { isRefreshing } = useAuth();
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(refreshUser());
   }, [dispatch]);
 
-  return (
+  return isRefreshing ? (
+    <LinearProgress />
+  ) : (
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />

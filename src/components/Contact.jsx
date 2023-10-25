@@ -45,8 +45,7 @@ export const Contact = () => {
     contacts.find(contact => contact.id === id);
   const { name, number } = getContact(contacts, id);
 
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const toggleMenuOpen = () => setOpen(pState => !pState);
 
   const handleDelete = () => {
     setOpen(false);
@@ -122,8 +121,8 @@ export const Contact = () => {
                 ariaLabel="Edit contact"
                 sx={{ position: 'absolute', bottom: 16, right: 16 }}
                 icon={<SpeedDialIcon />}
-                onClose={handleClose}
-                onOpen={handleOpen}
+                onClose={toggleMenuOpen}
+                onOpen={toggleMenuOpen}
                 open={open}
               >
                 <SpeedDialAction
